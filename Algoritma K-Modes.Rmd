@@ -1,6 +1,6 @@
 ---
 title: Algoritma K-Modes
-author: Akhlakul Karimah-Institut Teknologi Statistika dan Bisnis Muhammadiyah
+author: Akhlakul-Institut Teknologi Statistika dan Bisnis Muhammadiyah
 date: "`r Sys.Date()`"
 output:
   prettydoc::html_pretty:
@@ -19,24 +19,60 @@ text-align: justify}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# R Markdown
+# Pengertian K-Modes
+Pertama kali diperkenalkan oleh Huang pada tahun 1997.
+K-Modes merupakan salah satu teknik dalam analisis klaster yang merupakan perluasan dari algoritma k-means untuk mengelompokkan data katagorik.
+Algoritma k-modes merupakan pengembangan dari algoritmak-means.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents [@deCarvalho2012]. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Kelebihan & Kelemahan
+## Kelebihan
+1. Bisa diterapkan untuk data katagorikal.
+2. Saat menghasilkan cluster prosesnya lebih rinci.
+3. Tidak sensitif terhadap outlier dan noise atau tidak mudah terjadi perubahan cluster.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Kelemahan
+1. Tidak optimal pada data tipe numerik.
+2. Hasil proses clustering tidak bergantung pada urutan masuk dataset.
 
-```{r cars}
-summary(cars)
+# Tahapan Analisis K-Modes
+1. Memasukkan data variabel
+2. Menentukan nilai k = 3, 4, 5, ..., 8.
+3. Menentukan centroid (pusat klaster) secara acak dari masing-masing klaster.
+4. Menghitung jarak tiap objek terhadap centroid menggunakan ukuran ketidaksamaan sederhana.
+5. Mengelompokkan objek berdasarkan jarak terdekat ke centroid.
+6. Menentukan modus dari setiap variabel sebagai centroid klaster.
+7. Menghitung ulang jarak tiap objek terhadap centroid baru menggunakan ukuran ketidaksamaan sederhana.
+8. Mengelompokkan objek berdasarkan jarak terdekat ke centroid.
+9. Apabila ada objek yang berpindah klaster, maka ulangi langkah ke enam sampai delapan hingga tidak ada objek yang berpindah klaster.
+10. Memilih k terbaik menggunakan Davies Bouldin Index. 
+11. Membuat profiling dari masing-masing klaster.
+
+
+
+```{r}
+library(MASS)
+library(klaR)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+library(readxl)
+data <- read_excel("D:/akhlakul/kuliah/semester 3/DATA MIINING/dataset/contact-lenses.xls")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+data
+```
 
-# Referensi
+```{r}
+colSums(is.na(data))
+```
+
+```{r}
+cluster.results <- kmodes(data, 3, iter.max = 24, weighted = FALSE)
+cluster.output <- cbind(data, cluster.results$cluster)
+```
+
+```{r}
+View(cluster.output)
+```
+
